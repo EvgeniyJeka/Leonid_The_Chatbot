@@ -124,9 +124,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-.idea/Leonid_The_Chatbot.iml
-.idea/encodings.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/workspace.xml
+
+.idea/*
 models/
+
