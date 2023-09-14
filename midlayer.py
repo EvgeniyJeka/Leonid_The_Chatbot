@@ -5,6 +5,11 @@ logging.basicConfig(level=logging.INFO)
 
 
 class MiddleLayer:
+    """
+    This class serves as a mediator between Gateway (REST API) and ChatBot -
+    it redirects user prompts to the right ChatBot instance and starts new ChatBot
+    instances when required.
+    """
 
     users_conversations = {}
 
