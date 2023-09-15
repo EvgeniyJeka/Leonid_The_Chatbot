@@ -127,5 +127,5 @@ dmypy.json
 
 
 .idea/*
-models/
+../models/
 

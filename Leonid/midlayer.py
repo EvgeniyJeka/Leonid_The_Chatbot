@@ -1,5 +1,10 @@
-from chatbot import ChatBot
 import logging
+
+try:
+    from Leonid.chatbot import ChatBot
+
+except ModuleNotFoundError:
+    from chatbot import ChatBot
 
 logging.basicConfig(level=logging.INFO)
 
