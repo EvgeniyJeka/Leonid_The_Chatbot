@@ -1,5 +1,5 @@
 # Leonid_The_Chatbot
-Chat bot based on vicuna model and llama-cpp-python library. 
+Chat bot based on <b>Vicuna</b> model (ggml-vicuna-13b-4bit-rev1.bin) and llama-cpp-python library. 
 
 In progress, early stages.
 
