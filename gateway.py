@@ -1,5 +1,6 @@
 import logging
 from flask import Flask, request
+import jwt
 
 try:
     from midlayer import MiddleLayer
@@ -35,21 +36,21 @@ class GatewayApp:
                 return {"error": "Access denied"}
 
             logging.info(f"Gateway: Forwarding to the model {user_name} : {user_prompt}")
-            # return {"status": "ok"}
+            # return {"test": "ok"}
 
             # Forwarding user name and user prompt to the model
             return MiddleLayer.handle_user_prompt(user_name, user_prompt)
-
 
     def run(self, host='0.0.0.0', port=5001):
         self.app.run(host=host, port=port)
 
     def extract_user_data(self, jwt_token):
-        # Temporary stub
-        # Parsing JWT
-        user_name = "Lisa"
-        user_token = "xxx"
-        return user_name, user_token
+
+        # Decode the JWT without verifying the signature
+        decoded_payload = jwt.decode(jwt_token, algorithms=["HS256"], options={"verify_signature": False})
+        logging.info(f"Gateway: decoded user token {decoded_payload}")
+
+        return decoded_payload['user_name'], decoded_payload['user_token']
 
     def user_token_validator(self, token_to_validate):
         # Authorization method - temporary stub
