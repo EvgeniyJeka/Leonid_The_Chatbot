@@ -3,7 +3,7 @@ from flask import Flask, request
 import jwt
 
 try:
-    from midlayer import MiddleLayer
+    from Leonid.midlayer import MiddleLayer
 
 except ModuleNotFoundError:
     from .midlayer import MiddleLayer

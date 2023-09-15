@@ -1,4 +1,4 @@
-from chatbot import ChatBot
+from Leonid.chatbot import ChatBot
 import logging
 
 logging.basicConfig(level=logging.INFO)

@@ -32,7 +32,7 @@ class ChatBot:
 
     def __init__(self):
         logging.info("Loading the model..")
-        self.llm = Llama(model_path="./models/ggml-vicuna-13b-4bit-rev1.bin", n_ctx=MAX_TOKENS_TOTAL_CONVERSATION)
+        self.llm = Llama(model_path="../models/ggml-vicuna-13b-4bit-rev1.bin", n_ctx=MAX_TOKENS_TOTAL_CONVERSATION)
         logging.info("Model loaded.")
 
     def send_prompt(self, user_input):
