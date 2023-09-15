@@ -6,7 +6,7 @@ try:
     from Leonid.midlayer import MiddleLayer
 
 except ModuleNotFoundError:
-    from .midlayer import MiddleLayer
+    from midlayer import MiddleLayer
 
 logging.basicConfig(level=logging.INFO)
 

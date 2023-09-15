@@ -1,6 +1,5 @@
 from llama_cpp import Llama
 import logging
-import json
 
 logging.basicConfig(level=logging.INFO)
 
@@ -26,13 +25,13 @@ class ChatBot:
     # context = "Your name is Leonid. Lisa is a developer she is debugging code, do your best to assist her. " \
     #           "You have plenty coins and stones near you."
 
-    context = "Your name is Leonid. You are very nice and polite, you have a great sense of humor."
+    context = "Your name is Leonid."
 
     llm = None
 
     def __init__(self):
         logging.info("Loading the model..")
-        self.llm = Llama(model_path="../models/ggml-vicuna-13b-4bit-rev1.bin", n_ctx=MAX_TOKENS_TOTAL_CONVERSATION)
+        self.llm = Llama(model_path="./models/ggml-vicuna-13b-4bit-rev1.bin", n_ctx=MAX_TOKENS_TOTAL_CONVERSATION)
         logging.info("Model loaded.")
 
     def send_prompt(self, user_input):
