@@ -9,6 +9,10 @@ MAX_TOKENS_TO_GENERATE = 100
 
 # TO DO:
 # 1. Model path - to env. variable, take it from there
+# 2. An option to reset context (API request?)
+# 3. An option to dump conversation into a file
+# 4. Context cut (automatically) - find a good point for this.
+# 5. An option to set context for a new conversation via API request 
 
 
 class ChatBot:

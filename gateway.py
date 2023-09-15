@@ -41,7 +41,7 @@ class GatewayApp:
             return MiddleLayer.handle_user_prompt(user_name, user_prompt)
 
 
-    def run(self, host='0.0.0.0', port=5000):
+    def run(self, host='0.0.0.0', port=5001):
         self.app.run(host=host, port=port)
 
     def extract_user_data(self, jwt_token):
