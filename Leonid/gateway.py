@@ -28,7 +28,11 @@ class GatewayApp:
                 user_prompt = request_content['user_prompt']
 
             except KeyError:
-                return {"error": "Invalid Log In request"}
+                return {"error": "Invalid request, fields missing"}
+
+            except Exception as e:
+                logging.error(f"Gateway: invalid request received: {request_content} - {e}")
+                return {"error": f"Invalid request"}
 
             # Getting user name and user token - the former is used to verify the current user is authorized
             user_name, user_token = self.extract_user_data(user_data)
@@ -44,6 +48,22 @@ class GatewayApp:
 
             # Forwarding user name and user prompt to the model
             return MiddleLayer.handle_user_prompt(user_name, user_prompt)
+
+        @self.app.route("/user_disconnection", methods=['POST'])
+        def handle_user_disconnection():
+            request_content = request.get_json()
+
+            try:
+                user_data = request_content['user_data']  # User name & token as JWT
+
+            except KeyError:
+                return {"error": "Invalid request, fields missing"}
+
+            except Exception as e:
+                logging.error(f"Gateway: invalid request received: {request_content} - {e}")
+                return {"error": f"Invalid request"}
+            # TO DO
+            pass
 
     def run(self, host='0.0.0.0', port=5001):
         self.app.run(host=host, port=port)

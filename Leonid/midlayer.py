@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.INFO)
 # model = llama.Llama("path/to/model.gguf")
 # model.stop()
 # del model
-# Recommended: stop instance mapped to user that has disconnected 
+# Recommended: stop instance mapped to user that has disconnected
 
 
 
@@ -55,6 +55,11 @@ class MiddleLayer:
             logging.info(f"Middle Layer: continuing a conversation with user {user_name}")
             conversation_partner = cls.users_conversations[user_name]
             return conversation_partner.send_prompt(user_prompt)
+
+    @classmethod
+    def user_disconnection_internal_handling(cls, user_name):
+        # TO DO 
+        pass
 
 
 # if __name__ == "__main__":
