@@ -58,7 +58,7 @@ class MiddleLayer:
 
     @classmethod
     def user_disconnection_internal_handling(cls, user_name):
-        # TO DO 
+        # TO DO
         pass
 
 
