@@ -8,6 +8,10 @@ except ModuleNotFoundError:
 
 logging.basicConfig(level=logging.INFO)
 
+# TO DO:
+#
+# 1. Think how can we STOP an instance in case the dialog is terminated (to save resources)
+
 
 class MiddleLayer:
     """
