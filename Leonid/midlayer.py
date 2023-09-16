@@ -11,6 +11,13 @@ logging.basicConfig(level=logging.INFO)
 # TO DO:
 #
 # 1. Think how can we STOP an instance in case the dialog is terminated (to save resources)
+# Example:
+# import llama_cpp_python as llama
+# model = llama.Llama("path/to/model.gguf")
+# model.stop()
+# del model
+# Recommended: stop instance mapped to user that has disconnected 
+
 
 
 class MiddleLayer:

@@ -10,6 +10,10 @@ except ModuleNotFoundError:
 
 logging.basicConfig(level=logging.INFO)
 
+# TO DO:
+#
+# 1. Add API method that will be used to stop and remove unused Chatbot instances - it will receive (disconnected)
+#    user name from ISeeCubes and pass it to the MidLayer, the former will stop the instance that is mapped to that name.
 
 class GatewayApp:
     def __init__(self):
