@@ -3,8 +3,8 @@ version: '3'
 
 services:
 
-  leonid_the_chatbot:
-      image: leonid_the_chatbot:latest
+  leonid_the_chat_bot:
+      image: leonid_the_chat_bot:latest
       build: ./Leonid
       ports:
         - 5001:5001

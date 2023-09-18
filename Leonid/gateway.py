@@ -62,8 +62,18 @@ class GatewayApp:
             except Exception as e:
                 logging.error(f"Gateway: invalid request received: {request_content} - {e}")
                 return {"error": f"Invalid request"}
-            # TO DO
-            pass
+
+            # Getting user name and user token - the former is used to verify the current user is authorized
+            user_name, user_token = self.extract_user_data(user_data)
+            token_validation = self.user_token_validator(user_token)
+
+            if token_validation is False:
+                logging.warning(f"Gateway: authorization issue - user {user_name} tried to use"
+                                f" an invalid access token {user_token}")
+                return {"error": "Access denied"}
+
+            logging.info(f"Gateway: forwarding user disconnection notification - {user_name}")
+            return MiddleLayer.user_disconnection_internal_handling(user_name)
 
     def run(self, host='0.0.0.0', port=5001):
         self.app.run(host=host, port=port)
