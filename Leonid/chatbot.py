@@ -15,6 +15,8 @@ MAX_TOKENS_TO_GENERATE = 100
 # 6. Consider to add the name of the person who is making the conversation to constructor and
 #    add it to the initial context
 
+TIME_TO_THINK_RESPONSE = "Please wait a few moments - I need time to think on my next brilliant answer"
+
 
 class ChatBot:
     """
@@ -28,11 +30,16 @@ class ChatBot:
     context = "Your name is Leonid."
 
     llm = None
+    conversation_pause_flag = False
 
     def __init__(self):
         logging.info("Loading the model..")
         self.llm = Llama(model_path="./models/ggml-vicuna-13b-4bit-rev1.bin", n_ctx=MAX_TOKENS_TOTAL_CONVERSATION)
         logging.info("Model loaded.")
+
+    def inject_context(self, injected_context: str):
+        self.context = injected_context
+        return True
 
     def send_prompt(self, user_input):
         """
@@ -42,6 +49,12 @@ class ChatBot:
         :param user_input: str
         :return: str
         """
+
+        # Waiting for a response from Vicuna. Blocking additional input to prevent crash
+        if self.conversation_pause_flag is True:
+            return TIME_TO_THINK_RESPONSE
+
+        self.conversation_pause_flag = True
 
         output = self.llm(f"Context: ({self.context}). Question: {user_input} Answer:",
                           max_tokens=MAX_TOKENS_TO_GENERATE,
@@ -56,6 +69,8 @@ class ChatBot:
 
         adding_to_conversation_context = f" Question: {user_input}, Answer: {response_returned}"
         self.context = self.context + adding_to_conversation_context
+
+        self.conversation_pause_flag = False
 
         return response_returned
 
