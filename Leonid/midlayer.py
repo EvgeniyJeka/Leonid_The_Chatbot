@@ -7,6 +7,7 @@ except ModuleNotFoundError:
     from chatbot import ChatBot
 
 logging.basicConfig(level=logging.INFO)
+DEFAULT_ERROR_MESSAGE = "Sorry. I don't feel well. I don't think we can speak right now. Please call later."
 
 # TO DO:
 #
@@ -48,7 +49,13 @@ class MiddleLayer:
             logging.info(f"Middle Layer: initiating a new conversation for user {user_name}")
             new_conversation_partner = ChatBot()
             cls.users_conversations[user_name] = new_conversation_partner
-            return new_conversation_partner.send_prompt(user_prompt)
+
+            try:
+                return new_conversation_partner.send_prompt(user_prompt)
+
+            except OSError as e:
+                logging.critical(f"Middle Layer: Chat bot doesn't respond - {e}")
+                return DEFAULT_ERROR_MESSAGE
 
         else:
             # Forwarding user prompt to the related ChatBot instance
@@ -58,8 +65,17 @@ class MiddleLayer:
 
     @classmethod
     def user_disconnection_internal_handling(cls, user_name):
-        # TO DO 
-        pass
+        # Stopping and removing instance following user disconnection
+        if user_name in cls.users_conversations.keys():
+            related_bot_instance = cls.users_conversations[user_name]
+            del related_bot_instance
+            del cls.users_conversations[user_name]
+
+            return {"result": f"Handled user disconnection {user_name}"}
+
+        else:
+            return {"result": f"Unknown user {user_name}. No instances were stopped."}
+
 
 
 # if __name__ == "__main__":

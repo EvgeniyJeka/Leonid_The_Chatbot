@@ -10,20 +10,26 @@ except ModuleNotFoundError:
 
 logging.basicConfig(level=logging.INFO)
 
-# TO DO:
-#
-# 1. Add API method that will be used to stop and remove unused Chatbot instances - it will receive (disconnected)
-#    user name from ISeeCubes and pass it to the MidLayer, the former will stop the instance that is mapped to that name.
 
 class GatewayApp:
+
     def __init__(self):
         self.app = Flask(__name__)
 
         @self.app.route("/receive_prompt", methods=['POST'])
         def receive_user_prompt():
+            """
+            This method parses user name and token packed in a JWT, and providing those are valid
+            the user's name (extracted from JWT) and user's prompt are forwarded to Vicuna language model
+            (through MiddleLayer). Response provided by the model is returned (if there is no response - the relevant
+            error message or notification is returned).
+            # NOTE: At the moment user's token isn't validated, the auth. module will be added later.
+            :return: str
+            """
             request_content = request.get_json()
 
             try:
+                # Verifying user input
                 user_data = request_content['user_data']  # User name & token as JWT
                 user_prompt = request_content['user_prompt']
 
@@ -44,13 +50,20 @@ class GatewayApp:
                 return {"error": "Access denied"}
 
             logging.info(f"Gateway: Forwarding to the model {user_name} : {user_prompt}")
-            # return {"test": "ok"}
 
             # Forwarding user name and user prompt to the model
             return MiddleLayer.handle_user_prompt(user_name, user_prompt)
 
         @self.app.route("/user_disconnection", methods=['POST'])
         def handle_user_disconnection():
+            """
+            This method handles user disconnection notification.
+            When a user that has a conversation with the chat bot terminates connection
+            the chat bot should be notified via this API method. After user name and token are
+            validated user's name is passed to the MiddleLayer, and the bot instance that had a conversation
+            with that given user is stopped and removed.
+            :return: dict with result report
+            """
             request_content = request.get_json()
 
             try:
@@ -62,13 +75,32 @@ class GatewayApp:
             except Exception as e:
                 logging.error(f"Gateway: invalid request received: {request_content} - {e}")
                 return {"error": f"Invalid request"}
-            # TO DO
-            pass
+
+            # Getting user name and user token - the former is used to verify the current user is authorized
+            user_name, user_token = self.extract_user_data(user_data)
+            token_validation = self.user_token_validator(user_token)
+
+            if token_validation is False:
+                logging.warning(f"Gateway: authorization issue - user {user_name} tried to use"
+                                f" an invalid access token {user_token}")
+                return {"error": "Access denied"}
+
+            logging.info(f"Gateway: forwarding user disconnection notification - {user_name}")
+            return MiddleLayer.user_disconnection_internal_handling(user_name)
 
     def run(self, host='0.0.0.0', port=5001):
         self.app.run(host=host, port=port)
 
     def extract_user_data(self, jwt_token):
+        """
+        Extracts user data from a JWT (JSON Web Token).
+
+        Parameters:
+           jwt_token (str): The JWT token to decode and extract user data from.
+        Returns:
+           tuple: A tuple containing user-related data extracted from the JWT.
+                  The tuple contains two elements: user name and user token.
+       """
 
         # Decode the JWT without verifying the signature
         decoded_payload = jwt.decode(jwt_token, algorithms=["HS256"], options={"verify_signature": False})
