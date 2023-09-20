@@ -76,6 +76,18 @@ class MiddleLayer:
         else:
             return {"result": f"Unknown user {user_name}. No instances were stopped."}
 
+    @classmethod
+    def inject_custom_context(cls, user_name, injected_context):
+
+        if user_name in cls.users_conversations.keys():
+            related_bot_instance = cls.users_conversations[user_name]
+            related_bot_instance.inject_context(injected_context)
+
+            return {"result": f"Content injected by user {user_name} : {injected_context}"}
+
+        else:
+            return {"result": f"Unknown user {user_name}. No content was injected."}
+
 
 
 # if __name__ == "__main__":

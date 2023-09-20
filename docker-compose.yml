@@ -8,6 +8,9 @@ services:
       build: ./Leonid
       ports:
         - 5001:5001
+      environment:
+        - MODEL_PATH=./models/ggml-vicuna-13b-4bit-rev1.bin
+        - MAX_CONTEXT_LENGHT=2400
 
 
 

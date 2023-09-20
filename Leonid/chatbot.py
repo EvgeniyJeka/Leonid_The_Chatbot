@@ -1,5 +1,6 @@
 from llama_cpp import Llama
 import logging
+import os
 
 logging.basicConfig(level=logging.INFO)
 
@@ -16,6 +17,8 @@ MAX_TOKENS_TO_GENERATE = 100
 #    add it to the initial context
 
 TIME_TO_THINK_RESPONSE = "Please wait a few moments - I need time to think on my next brilliant answer"
+MODEL_PATH = os.getenv("MODEL_PATH")
+MAX_CONTENT_LENGTH = os.getenv("MAX_CONTEXT_LENGHT")
 
 
 class ChatBot:
@@ -27,19 +30,41 @@ class ChatBot:
     # context = "Your name is Leonid. Lisa is a developer she is debugging code, do your best to assist her. " \
     #           "You have plenty coins and stones near you."
 
-    context = "Your name is Leonid."
+    initial_context = "Your name is Leonid. "
+    context = initial_context
 
     llm = None
     conversation_pause_flag = False
 
     def __init__(self):
         logging.info("Loading the model..")
-        self.llm = Llama(model_path="./models/ggml-vicuna-13b-4bit-rev1.bin", n_ctx=MAX_TOKENS_TOTAL_CONVERSATION)
+        self.llm = Llama(model_path=MODEL_PATH, n_ctx=MAX_TOKENS_TOTAL_CONVERSATION)
         logging.info("Model loaded.")
 
     def inject_context(self, injected_context: str):
         self.context = injected_context
         return True
+
+    def cut_context(self, text):
+        """
+        This method comes to handle a case in which the conversation context (all previous questions and answers)
+        becomes too long. It can reduce performance and significantly increase the time it takes for the model
+        to deal with the next input.
+        Once the total length of the conversation reaches the limit (which is set in env. variable)
+        it is cut by 2 (the closest pair to the cutting point "Question - Answer" is taken).
+        :param text: str
+        :return: str
+        """
+
+        logging.info(f"Chat Bot: The context length has exceeded the limit, it has reached {len(text)}\n"
+                     f"Chat Bot: Cutting the context by half.")
+
+        list_converted = text.split("Question")
+        list_middle = int(len(list_converted) / 2)
+        modified_list = list_converted[list_middle:]
+
+        result = "Question" + "Question".join(modified_list)
+        return result
 
     def send_prompt(self, user_input):
         """
@@ -69,6 +94,11 @@ class ChatBot:
 
         adding_to_conversation_context = f" Question: {user_input}, Answer: {response_returned}"
         self.context = self.context + adding_to_conversation_context
+
+        # Cutting conversation context to improve performance if it exceeds the limits
+        if len(self.context) > int(MAX_CONTENT_LENGTH):
+            modified_content = self.cut_context(self.context)
+            self.context = self.initial_context + modified_content
 
         self.conversation_pause_flag = False
 
