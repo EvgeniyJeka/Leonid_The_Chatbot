@@ -9,17 +9,6 @@ except ModuleNotFoundError:
 logging.basicConfig(level=logging.INFO)
 DEFAULT_ERROR_MESSAGE = "Sorry. I don't feel well. I don't think we can speak right now. Please call later."
 
-# TO DO:
-#
-# 1. Think how can we STOP an instance in case the dialog is terminated (to save resources)
-# Example:
-# import llama_cpp_python as llama
-# model = llama.Llama("path/to/model.gguf")
-# model.stop()
-# del model
-# Recommended: stop instance mapped to user that has disconnected
-
-
 
 class MiddleLayer:
     """
