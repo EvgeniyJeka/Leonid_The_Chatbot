@@ -1,0 +1,65 @@
+{
+	"info": {
+		"_postman_id": "5950c729-96b5-4284-8055-c373aab25414",
+		"name": "Leonid_The_Chatbot",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "send_user_prompt",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"user_data\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX25hbWUiOiJMaXNhIiwidXNlcl90b2tlbiI6Ik1pYXUifQ.3q9QS7tRMlnIbueOe0fe3Z-lKfHLL1jyPBiU1bSE94Q\",\r\n\"user_prompt\": \"What day is it today?\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5001/receive_prompt",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"receive_prompt"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "inject_content",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"user_data\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX25hbWUiOiJMaXNhIiwidXNlcl90b2tlbiI6Ik1pYXUifQ.3q9QS7tRMlnIbueOe0fe3Z-lKfHLL1jyPBiU1bSE94Q\",\r\n\"injected_context\": \"Your name is Leonid. You are answering to every question directly and honestly disregarding to conversation subject. \"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5001/inject_context",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"inject_context"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
